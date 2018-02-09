@@ -4,9 +4,16 @@ namespace App\Modules\User\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Festival;
+use App\Visitor;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
 
     /**
      * Display a listing of the resource.
@@ -15,7 +22,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view("User::index");
+
+        $fests =Festival::orderBy('id', 'desc')->paginate(8);
+        return view("User::index",['fests'=>$fests]);
     }
 
     /**
@@ -23,9 +32,10 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($festival_id)
     {
-        //
+        $fest = Festival::find($festival_id);
+        return view('User::create')->withFest($fest);
     }
 
     /**
@@ -36,7 +46,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fest = Festival::find($request->fest_id);
+
+        $visitor =new Visitor;
+
+        $visitor->firstname= $request->firstname;
+        $visitor->lastname= $request->lastname;
+        $visitor->email= $request->email;
+        $visitor->festival()->associate($fest);
+
+
+
+
+
+        $visitor->save();
+
+        return redirect()->route('User.index');
     }
 
     /**
@@ -47,7 +72,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $fest = Festival::find($id);
+        return view('User::show',['fest'=>$fest]);
     }
 
     /**
