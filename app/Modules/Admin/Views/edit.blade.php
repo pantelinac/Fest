@@ -33,7 +33,7 @@
             {{ Form::label('start_event', 'Start_event:') }}
             {{ Form::date('start_event', \Carbon\Carbon::now(), ["class" => 'form-control input-lg']) }}
 
-            {{ Form::label('end_event', 'Start_event:') }}
+            {{ Form::label('end_event', 'End_event:') }}
             {{ Form::date('end_event', \Carbon\Carbon::now(), ["class" => 'form-control input-lg']) }}
 
 
